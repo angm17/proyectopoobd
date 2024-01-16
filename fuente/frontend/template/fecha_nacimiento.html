@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Fecha Nacimiento{% endblock %}
+
+
+{% block css %}
+
+<style>
+    .sdsdsd{
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centrar horizontalmente */
+    }
+
+    .titulo-verde{
+        color: #E0F300;
+        text-align: center;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+
+        <div class="row pt-3 sdsdsd pb-5">
+           
+            <div class="col-12">
+                <span class="titulo titulo-verde text-center">
+                    ¡¡¡Tu fecha de nacimiento no está registrada!!!
+                </span>
+                
+            </div>
+        </div>
+
+        <div class="row pt-4 sdsdsd pt-5 mt-5">
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="inputs_titulo" for="cedula">Ingrese fecha de nacimiento</label>
+                    <input type="date" class="form-control form-control-lg" id="fecha_nacimiento">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 botonera mt-3 pt-5">
+                <button id="continuar" class="btn btn-colorraro">Continuar</button>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script>
+const continuar =  document.querySelector("#continuar")
+
+
+continuar.addEventListener("click", function(e){
+    e.preventDefault();
+    const fecha_nacimiento = document.querySelector("#fecha_nacimiento");
+    eel.login2(fecha_nacimiento.value);
+})
+
+</script>
+
+
+{% endblock %}

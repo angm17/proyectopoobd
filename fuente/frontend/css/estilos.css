@@ -1,0 +1,22 @@
+body {
+    display: flex;
+    flex-direction: row; /* Los elementos se alinean verticalmente */
+    justify-content: center; /* Centrar verticalmente */
+    align-items: center; /* Centrar horizontalmente */
+    height: 100vh;
+    margin: 0;
+}
+
+#objetivo, #cambiante {
+    width: 200px;
+    height: 300px;
+    margin: 15px; /* Espacio entre los recuadros */
+}
+
+#objetivo {
+    border: 3px solid black;
+}
+
+#cambiante {
+    border: 3px solid grey;
+}

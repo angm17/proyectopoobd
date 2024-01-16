@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Selecciona la categoría{% endblock %}
+
+
+{% block css %}
+
+<style>
+    .sdsdsd{
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centrar horizontalmente */
+    }
+
+    .titulo-verde{
+        color: #E0F300;
+        text-align: center;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .categoria{
+        margin-top: 10px;
+        height: 100px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Irish Grover;
+        transition: box-shadow 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+    }
+
+    .categoria:hover{
+        transform: scale(1.05);
+        box-shadow: 0px 8px 16px rgba(255, 255, 255, 0.8);
+    }
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+
+        <div class="row pt-3 sdsdsd pb-5">
+           
+            <div class="col-12 text-center">
+                <span class="titulo titulo-verde ">
+                    ¡Selecciona una categoría!
+                </span>
+                
+            </div>
+        </div>
+
+        <div id="categorias" class="row pt-4 sdsdsd pt-5 mt-5">
+            <!-- <div class="col-md-4 text-center">
+                <div class="card categoria" style="background-color: #E0F300;">
+                    <h4>Hola</h4>
+                </div>
+            </div> -->
+
+           
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script>
+
+const categoriasDiv = document.querySelector("#categorias");
+
+function dibujaTarjetas(categorias, callback){
+    categorias.forEach(categoria => {
+        console.log(categoria);
+
+        const col =  document.createElement("div");
+        col.classList.add("col-md-4", "text-center");
+
+
+        const card =  document.createElement("button");
+        card.classList.add("btn", "btn-block", "categoria");
+
+        if (categoria["color"]){
+            card.style = "background-color: #" + categoria["color"] + ";";
+        }  
+        
+
+        col.append(card);
+
+        card.innerHTML = categoria["descripcion"];
+
+
+        card.addEventListener("click", function(e){
+            eel.IniciaJuegoMemoria(categoria["categoria"]);
+        })
+
+        categoriasDiv.append(col);
+
+    });
+}
+
+async function run() {
+    const categorias = await eel.ObtieneCategorias()();
+    dibujaTarjetas(categorias, function(){
+
+    })
+}
+  
+run();
+
+
+</script>
+
+
+{% endblock %}

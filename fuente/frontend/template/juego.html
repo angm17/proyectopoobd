@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% block title %}Selecciona la categoría{% endblock %}
+
+
+{% block css %}
+
+<style>
+    .sdsdsd{
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centrar horizontalmente */
+    }
+
+    .titulo-verde{
+        color: #E0F300;
+        text-align: center;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .categoria{
+        margin-top: 10px;
+        height: 100px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Irish Grover;
+        transition: box-shadow 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+    }
+
+    .categoria:hover{
+        transform: scale(1.05);
+        box-shadow: 0px 8px 16px rgba(255, 255, 255, 0.8);
+    }
+
+    .juego-memoria {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        width: auto;
+        margin: auto;
+    }
+    
+    .tarjeta {
+        width: 180px;
+        height: 250px;
+        background: url("../assets/imagenes/carta.png") ;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        z-index: 999;
+    }
+
+    .tarjeta:hover {
+        transform: scale(1.03);
+    }
+
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+
+        <div class="row pt-3 sdsdsd pb-5">
+           
+            <div class="col-12 text-center">
+                <span class="titulo titulo-verde ">
+                    aca va el contador
+                </span>
+                
+            </div>
+        </div>
+
+        <!-- <div id="tarjetas" class="row pt-4 sdsdsd pt-5 mt-5">
+           
+        </div> -->
+
+        <div id="juego-memoria" class="juego-memoria"></div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script>
+let tarjetaSeleccionada = null;
+let chequeoEnCurso = false;
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const imagenes = [
+        'img1.jpg', 'img1.jpg',
+        'img2.jpg', 'img2.jpg',
+        'img3.jpg', 'img3.jpg',
+        'img4.jpg', 'img4.jpg',
+        'img5.jpg', 'img5.jpg'
+    ];
+
+    const juegoMemoria = document.getElementById('juego-memoria');
+    const tarjetasBarajadas = barajar(imagenes);
+
+    tarjetasBarajadas.forEach((img, index) => {
+        const tarjeta = document.createElement('div');
+        tarjeta.classList.add('tarjeta');
+        
+        // Guardar el nombre de la imagen en un atributo de la tarjeta
+        tarjeta.dataset.imagen = img;
+    
+        // Manejar el clic en la tarjeta
+        tarjeta.addEventListener('click', () => {
+            if (chequeoEnCurso) return; // Ignora clics mientras se chequea otra pareja
+            if (tarjeta === tarjetaSeleccionada) return; // Ignora clics en la misma tarjeta
+    
+            tarjeta.style.backgroundImage = `url(${img})`; // Muestra la imagen
+    
+            if (!tarjetaSeleccionada) {
+                // No hay una tarjeta seleccionada actualmente
+                tarjetaSeleccionada = tarjeta;
+            } else {
+                // Comprobar si la nueva tarjeta coincide con la tarjeta seleccionada
+                if (tarjeta.dataset.imagen === tarjetaSeleccionada.dataset.imagen) {
+                    // Las tarjetas coinciden
+                    tarjetaSeleccionada = null; // Reinicia para la siguiente elección
+                } else {
+                    // Las tarjetas no coinciden, ocultarlas después de un breve período
+                    chequeoEnCurso = true;
+                    setTimeout(() => {
+                        tarjeta.style.backgroundImage = '';
+                        tarjetaSeleccionada.style.backgroundImage = '';
+                        tarjetaSeleccionada = null;
+                        chequeoEnCurso = false;
+                    }, 10);
+                }
+            }
+        });
+    
+        juegoMemoria.appendChild(tarjeta);
+    });
+});
+
+function barajar(arreglo) {
+    for (let i = arreglo.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arreglo[i], arreglo[j]] = [arreglo[j], arreglo[i]];
+    }
+    return arreglo;
+}
+
+
+
+async function run() {
+    const cartas = await eel.ObtieneCartas()();
+    console.log(cartas);
+}
+  
+run();
+
+
+</script>
+
+
+{% endblock %}
