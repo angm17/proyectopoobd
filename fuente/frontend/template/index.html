@@ -67,11 +67,16 @@
 const continuar =  document.querySelector("#continuar")
 
 
-continuar.addEventListener("click", function(e){
+continuar.addEventListener("click", async function(e){
     e.preventDefault();
     const cedula = document.querySelector("#cedula");
     const nombres = document.querySelector("#nombres");
-    eel.login(nombres.value, cedula.value);
+    var mensaje = await eel.login(nombres.value, cedula.value)();
+
+    if(mensaje){
+        swal ( "Oops" ,  mensaje ,  "error" )
+
+    }
 })
 
 </script>

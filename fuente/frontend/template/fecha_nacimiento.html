@@ -62,10 +62,14 @@
 const continuar =  document.querySelector("#continuar")
 
 
-continuar.addEventListener("click", function(e){
+continuar.addEventListener("click", async function(e){
     e.preventDefault();
     const fecha_nacimiento = document.querySelector("#fecha_nacimiento");
-    eel.login2(fecha_nacimiento.value);
+    var mensaje = await eel.login2(fecha_nacimiento.value)();
+
+    if(mensaje){
+        swal ( "Oops" ,  mensaje ,  "error" )
+    }
 })
 
 </script>
