@@ -40,14 +40,16 @@
     .juego-memoria {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 10px;
-        width: auto;
+        grid-gap: 10px;
+        
         margin: auto;
+        width: 80%; /* Ancho de la cuadrícula */
+        height: 80vh;
+
     }
     
     .tarjeta {
-        width: 180px;
-        height: 250px;
+        width: 50%; /* Hace que la imagen ocupe todo el ancho de la tarjeta */
         background: url("../assets/imagenes/carta.png") ;
         background-size: cover;
         display: flex;
@@ -63,8 +65,6 @@
         transform: scale(1.03);
     }
 
-
-
 </style>
 
 {% endblock %}
@@ -75,17 +75,28 @@
 
         <div class="row pt-3 sdsdsd pb-5">
            
-            <div class="col-12 text-center">
+            <div class="col-3 text-center">
+                    <a href="index.html" class="btn btn-warning titulo titulo-verde ">Inicio</a> 
+            </div>
+
+            <div class="col-3 text-center">
                 <span class="titulo titulo-verde ">
-                    aca va el contador
+                    <div id="display">00:00</div>
                 </span>
                 
             </div>
-        </div>
+            <div class="col-3 text-center">
+                <span class="titulo titulo-verde " style="color: red;">
+                    Fallos: <span id="errores">0</span>
+                </span>
+            </div>
 
-        <!-- <div id="tarjetas" class="row pt-4 sdsdsd pt-5 mt-5">
-           
-        </div> -->
+            <div class="col-3 text-center">
+                
+                <a href="categorias.html" class="btn btn-danger titulo titulo-verde ">Regresar</a> 
+                
+            </div>
+        </div>
 
         <div id="juego-memoria" class="juego-memoria"></div>
 
@@ -98,60 +109,12 @@
 
 
 <script>
+
 let tarjetaSeleccionada = null;
 let chequeoEnCurso = false;
+const erroresSP = document.querySelector('#errores');
+const display = document.getElementById('display');
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    const imagenes = [
-        'img1.jpg', 'img1.jpg',
-        'img2.jpg', 'img2.jpg',
-        'img3.jpg', 'img3.jpg',
-        'img4.jpg', 'img4.jpg',
-        'img5.jpg', 'img5.jpg'
-    ];
-
-    const juegoMemoria = document.getElementById('juego-memoria');
-    const tarjetasBarajadas = barajar(imagenes);
-
-    tarjetasBarajadas.forEach((img, index) => {
-        const tarjeta = document.createElement('div');
-        tarjeta.classList.add('tarjeta');
-        
-        // Guardar el nombre de la imagen en un atributo de la tarjeta
-        tarjeta.dataset.imagen = img;
-    
-        // Manejar el clic en la tarjeta
-        tarjeta.addEventListener('click', () => {
-            if (chequeoEnCurso) return; // Ignora clics mientras se chequea otra pareja
-            if (tarjeta === tarjetaSeleccionada) return; // Ignora clics en la misma tarjeta
-    
-            tarjeta.style.backgroundImage = `url(${img})`; // Muestra la imagen
-    
-            if (!tarjetaSeleccionada) {
-                // No hay una tarjeta seleccionada actualmente
-                tarjetaSeleccionada = tarjeta;
-            } else {
-                // Comprobar si la nueva tarjeta coincide con la tarjeta seleccionada
-                if (tarjeta.dataset.imagen === tarjetaSeleccionada.dataset.imagen) {
-                    // Las tarjetas coinciden
-                    tarjetaSeleccionada = null; // Reinicia para la siguiente elección
-                } else {
-                    // Las tarjetas no coinciden, ocultarlas después de un breve período
-                    chequeoEnCurso = true;
-                    setTimeout(() => {
-                        tarjeta.style.backgroundImage = '';
-                        tarjetaSeleccionada.style.backgroundImage = '';
-                        tarjetaSeleccionada = null;
-                        chequeoEnCurso = false;
-                    }, 10);
-                }
-            }
-        });
-    
-        juegoMemoria.appendChild(tarjeta);
-    });
-});
 
 function barajar(arreglo) {
     for (let i = arreglo.length - 1; i > 0; i--) {
@@ -164,11 +127,124 @@ function barajar(arreglo) {
 
 
 async function run() {
+    let errores = 0;
+    let minutos = 0, segundos = 0;
+    let cronometro;
+
+    clearInterval(cronometro);
+    cronometro = setInterval(() => {
+        segundos++;
+        if (segundos === 60) {
+            minutos++;
+            segundos = 0;
+            if (minutos === 60) {
+                minutos = 0;
+            }
+        }
+        display.textContent = `${pad(minutos)}:${pad(segundos)}`;
+    }, 1000);
+    function pad(num) {
+        return num < 10 ? '0' + num : num;
+    }
+
+
+    let contador = 0;
+    
+    const path = '../assets/cartas/';
     const cartas = await eel.ObtieneCartas()();
-    console.log(cartas);
+    
+    let maximo = cartas.length;
+    const imagenes2 =   cartas.map(f => { 
+        return [path + f.imagen, path + f.imagen]
+    })
+    let imagenes = [];
+    
+    imagenes2.forEach(pareja => imagenes.push(...pareja));
+
+    const juegoMemoria = document.getElementById('juego-memoria');
+    const tarjetasBarajadas = barajar(imagenes);
+
+    tarjetasBarajadas.forEach((img, index) => {
+        const tarjeta = document.createElement('div');
+        tarjeta.classList.add('tarjeta');
+        
+        // Guardar el nombre de la imagen en un atributo de la tarjeta
+        tarjeta.dataset.imagen = img;
+        tarjeta.dataset.resuelto = '0';
+
+        // Manejar el clic en la tarjeta
+        tarjeta.addEventListener('click', function (e){
+            if (chequeoEnCurso) return; // Ignora clics mientras se chequea otra pareja
+            if (tarjeta === tarjetaSeleccionada) return; // Ignora clics en la misma tarjeta
+            if (tarjeta.dataset.resuelto == '1') return; // Ignora clics en la misma tarjeta
+            if (tarjetaSeleccionada?.dataset.resuelto == '1') return; // Ignora clics en la misma tarjeta
+        
+            tarjeta.style.backgroundImage = `url(${img})`; // Muestra la imagen
+        
+            if (!tarjetaSeleccionada) {
+                // No hay una tarjeta seleccionada actualmente
+                tarjetaSeleccionada = tarjeta;
+            } else {
+                // Comprobar si la nueva tarjeta coincide con la tarjeta seleccionada
+                if (tarjeta.dataset.imagen === tarjetaSeleccionada.dataset.imagen) {
+                    tarjeta.dataset.resuelto = '1';
+                    tarjetaSeleccionada.dataset.resuelto = '1';
+                    
+
+                    tarjetaSeleccionada = null; 
+                    contador++;
+                    if(contador == maximo){
+                        clearInterval(cronometro);
+                        juegoTerminado();
+                    } 
+                } else {
+                    // Las tarjetas no coinciden, ocultarlas después de un breve período
+                    chequeoEnCurso = true;
+                    setTimeout(() => {
+                        tarjeta.style.backgroundImage = '';
+                        tarjetaSeleccionada.style.backgroundImage = '';
+                        tarjetaSeleccionada = null;
+                        chequeoEnCurso = false;
+                    }, 500);
+
+                    errores++;
+                    erroresSP.innerHTML = errores;
+
+                }
+            }
+        }
+        );
+
+        juegoMemoria.appendChild(tarjeta);
+    });
 }
-  
+
+
+
 run();
+
+
+async function juegoTerminado(){
+    const tiempo = display.innerHTML;
+    const errores = erroresSP.innerHTML;
+
+    var respuesta = await eel.GuardaJuego(tiempo, errores)();
+
+    if(respuesta){
+
+        swal ( 
+            "¡Genial!" ,  
+            "Haz finalizado el juego en " + tiempo  + " y con " + errores + " errores. Tu puntuación es de: " + respuesta ,  
+            "success" 
+        ).then((willRedirect) => {
+            if (willRedirect) {
+              window.location.href = "index.html";
+            }
+        });
+
+    }
+
+}
 
 
 </script>

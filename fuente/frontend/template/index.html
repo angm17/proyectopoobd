@@ -2,6 +2,22 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
+
+<style>
+    .sdsdsd{
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centrar horizontalmente */
+    }
+
+    .titulo-verde{
+        color: #E0F300;
+        text-align: center;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+</style>
     <div class="container-fluid">
 
         <div class="row pt-3">
@@ -11,7 +27,7 @@
                 </div>
                 
             </div>
-            <div class="col-6">
+            <div class="col-6 ">
                 <div class="row">
                     <div class="col-12">
                         <span class="titulo">
@@ -34,25 +50,24 @@
             </div>
         </div>
 
-        <div class="row pt-5 mt-3">
-            <div class="col-6">
+        <div class="row pt-5 mt-3 sdsdsd">
+            <div class="col-6 ">
                 <div class="form-group">
                     <label class="inputs_titulo" for="cedula">Ingrese su N° de cédula</label>
                     <input type="text" class="form-control form-control-lg" id="cedula" placeholder="C.I.">
                 </div>
             </div>
 
-            <div class="col-6">
-                <div class="form-group">
-                    <label class="inputs_titulo" for="nombres">Ingrese sus nombres</label>
-                    <input type="text" class="form-control form-control-lg" id="nombres" placeholder="Nombres">
-                </div>
-            </div>
+            
         </div>
 
         <div class="row">
             <div class="col-12 botonera mt-3 pt-5">
                 <button id="continuar" class="btn btn-colorraro">Continuar</button>
+            </div>
+            <hr>
+            <div class="col-12 botonera mt-3 pt-5">
+                <button id="verRanking" class="btn btn-colorraro">Ver Ranking</button>
             </div>
         </div>
 
@@ -70,12 +85,10 @@ const continuar =  document.querySelector("#continuar")
 continuar.addEventListener("click", async function(e){
     e.preventDefault();
     const cedula = document.querySelector("#cedula");
-    const nombres = document.querySelector("#nombres");
-    var mensaje = await eel.login(nombres.value, cedula.value)();
+    var mensaje = await eel.login( cedula.value)();
 
     if(mensaje){
         swal ( "Oops" ,  mensaje ,  "error" )
-
     }
 })
 

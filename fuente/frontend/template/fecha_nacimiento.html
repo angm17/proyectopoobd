@@ -37,6 +37,14 @@
         </div>
 
         <div class="row pt-4 sdsdsd pt-5 mt-5">
+            
+            <div class="col-6">
+                <div class="form-group">
+                    <label class="inputs_titulo" for="nombres">Ingrese sus nombres</label>
+                    <input type="text" class="form-control form-control-lg" id="nombres" placeholder="Nombres">
+                </div>
+            </div>
+            
             <div class="col-6">
                 <div class="form-group">
                     <label class="inputs_titulo" for="cedula">Ingrese fecha de nacimiento</label>
@@ -64,8 +72,10 @@ const continuar =  document.querySelector("#continuar")
 
 continuar.addEventListener("click", async function(e){
     e.preventDefault();
+    const nombres = document.querySelector("#nombres");
+
     const fecha_nacimiento = document.querySelector("#fecha_nacimiento");
-    var mensaje = await eel.login2(fecha_nacimiento.value)();
+    var mensaje = await eel.login2(nombres.value, fecha_nacimiento.value)();
 
     if(mensaje){
         swal ( "Oops" ,  mensaje ,  "error" )
