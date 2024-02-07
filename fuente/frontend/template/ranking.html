@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Mejores puntuaciones {% endblock %}
+
+
+{% block css %}
+
+<style>
+    .sdsdsd{
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centrar horizontalmente */
+    }
+
+    .titulo-verde{
+        color: #E0F300;
+        text-align: center;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .categoria{
+        margin-top: 10px;
+        height: 100px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: Irish Grover;
+        transition: box-shadow 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+    }
+
+    .categoria:hover{
+        transform: scale(1.05);
+        box-shadow: 0px 8px 16px rgba(255, 255, 255, 0.8);
+    }
+
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid">
+
+        <div class="row pt-3 sdsdsd pb-1">
+           
+            <div class="col-12 text-center">
+                <span class="titulo titulo-verde ">
+                    Mejores puntuaciones
+                </span>
+                
+            </div>
+        </div>
+
+        <div class="row pt-4 titulo-verde sdsdsd pt-3 mt-1">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombres</th>
+                        <th>Puntaje</th>
+                        <th>Tiempo</th>
+                        <th>Errores</th>
+                    </tr>
+                </thead>
+                
+                <tbody id="puntuaciones" class="bg-light text-dark">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row pt-3 sdsdsd" style="position: fixed; bottom: 0; left: 0; right: 0; margin: auto; padding-bottom:10px;">
+            <div class="col-3 text-center">
+                <a href="index.html" class="btn btn-danger titulo titulo-verde ">Inicio</a> 
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+
+
+<script>
+
+const categoriasDiv = document.querySelector("#puntuaciones");
+const tbody = document.getElementById("puntuaciones");
+
+function dibujaPuntuaciones(categorias, callback){
+    tbody.innerHTML = ''
+    categorias.forEach((puntuacion, indice) => {
+        console.log(puntuacion);
+        
+        var tr = document.createElement("tr");
+
+
+        var tdid = document.createElement("td");
+        tdid.textContent = indice + 1;
+        tr.appendChild(tdid);
+
+        var tdNombre = document.createElement("td");
+        tdNombre.textContent = puntuacion.nombres;
+        tr.appendChild(tdNombre);
+
+        var tdPuntaje = document.createElement("td");
+        tdPuntaje.textContent = puntuacion.puntuacion;
+        tr.appendChild(tdPuntaje);
+
+        var tdTiempo = document.createElement("td");
+        tdTiempo.textContent = puntuacion.tiempo;
+        tr.appendChild(tdTiempo);
+
+        var tdErrores = document.createElement("td");
+        tdErrores.textContent = puntuacion.errores;
+        tr.appendChild(tdErrores);
+
+        tbody.appendChild(tr);
+    });
+    callback();
+}
+
+async function run() {
+    const categorias = await eel.ObtienePuntuaciones()();
+    dibujaPuntuaciones(categorias, function(){
+        
+        
+    })
+}
+  
+run();
+
+
+</script>
+
+
+{% endblock %}

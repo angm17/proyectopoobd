@@ -41,6 +41,21 @@ def object_as_dict(obj):
     # Convierte un objeto SQLAlchemy en un diccionario
     return {c.key: getattr(obj, c.key)
             for c in inspect(obj).mapper.column_attrs}
+
+
+
+
+
+
+# def object_as_dict(obj):
+#     if isinstance(obj, tuple):  # Cada elemento en 'cartas' será una tupla (carta, jugador)
+#         # Construye un diccionario combinando los atributos de 'carta' y 'jugador'
+#         return {**{c.key: getattr(obj[0], c.key) for c in inspect(obj[0]).mapper.column_attrs},
+#                 **{c.key: getattr(obj[1], c.key) for c in inspect(obj[1]).mapper.column_attrs}}
+#     else:
+#         # Si no es una tupla, asume que es una instancia de modelo directamente
+#         return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs}
+
 # import configparser
 # import mysql.connector
 # from mysql.connector import Error

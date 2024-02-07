@@ -1,7 +1,8 @@
 from datos.db import  Database, read_all_rows, object_as_dict
 import eel
-from sqlalchemy import insert ### agregado
+from sqlalchemy import insert, asc,desc ### agregado
 from datetime import datetime ### agregado
+from sqlalchemy.inspection import inspect
 
 idUsuario = -1
 nombres = ""
@@ -104,7 +105,34 @@ def GuardaJuego(tiempo, errores):
     except Exception as err: 
         print(f"Unexpected {err=}, {type(err)=}")
         return ""
+@eel.expose
+def ObtienePuntuaciones():
+    db = Database()
+    # print(categoria) 
+    session = db.get_session()
+    cartas = db.base.classes.juego_memoria
+    jugadores = db.base.classes.jugadores
+    
+    # cartas = session.query(cartas).order_by(asc(cartas.puntuacion)).limit(10)
 
+    cartas = session.query(cartas.id, cartas.jugador, cartas.tiempo, cartas.errores, cartas.puntuacion, jugadores.nombres).join(jugadores, cartas.jugador == jugadores.jugador).order_by(desc(cartas.puntuacion)).limit(10)
+    
+    # cartas_dict = [object_as_dict(cat) for cat in cartas]
+    
+    cartas_dict = [
+    {
+        'id': row.id,
+        'jugador': row.jugador,
+        'tiempo': row.tiempo,
+        'errores': row.errores,
+        'puntuacion': str(row.puntuacion),
+        'nombres': row.nombres
+    }
+    for row in cartas
+]
+    
+    session.close()
+    return cartas_dict
 
 def calcula_puntuacion(tiempo, errores):
     constante_segundos = 60

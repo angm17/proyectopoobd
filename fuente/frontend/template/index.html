@@ -80,7 +80,7 @@
 
 <script>
 const continuar =  document.querySelector("#continuar")
-
+const verRanking =  document.querySelector("#verRanking")
 
 continuar.addEventListener("click", async function(e){
     e.preventDefault();
@@ -90,6 +90,11 @@ continuar.addEventListener("click", async function(e){
     if(mensaje){
         swal ( "Oops" ,  mensaje ,  "error" )
     }
+})
+
+verRanking.addEventListener("click", async function(e){
+    e.preventDefault();
+    go_to("ranking.html");
 })
 
 </script>
